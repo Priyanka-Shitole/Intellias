@@ -1,0 +1,49 @@
+.example-tree-invisible {
+  display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+#allOption ::ng-deep .mat-pseudo-checkbox {
+  display: none !important;
+}
+/*
+   * This padding sets alignment of the nested nodes.
+   */
+.example-tree .mat-nested-tree-node div[role="group"] {
+  padding-left: 40px;
+}
+
+
+.example-tree div[role="group"] > .mat-tree-node {
+  padding-left: 40px;
+}
+
+.group-section {
+  .mat-mdc-option .mat-pseudo-checkbox-full {
+    display: none !important;
+    border: 2px solid red;
+  }
+}
+mat-form-field {
+  width: 80%;
+}
+
+mat-dialog-actions {
+  justify-content: end;
+}
+.mat-mdc-dialog-container .mdc-dialog__container {
+  max-height: 587px !important;
+  margin: auto;
+}
+.invite-btn {
+  margin-right: 12px;
+}
+button {
+  font-size: 17px;
+  padding: 22px;
+}

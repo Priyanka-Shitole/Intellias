@@ -1,0 +1,71 @@
+
+<mat-dialog-content>
+  <div>
+    <p>To:</p>
+    <div *ngFor="let email of selectedParties">
+      {{ email.email }}
+    </div>
+
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Invitation to Quote</title>
+      </head>
+      <body>
+        <h2>Invitation to Quote for {{ instumentData.name }}</h2>
+        <p>Hello,</p>
+
+        <p>I hope this email finds you well.</p>
+
+        <p>
+          I am reaching out to invite you to provide a quote for the
+          <strong>{{ instumentData.name }}</strong> that we are currently
+          seeking. We believe that your expertise in this field would greatly
+          benefit our project.
+        </p>
+
+        <h3>Instrument Details:</h3>
+        <ul>
+          <li><strong>Instrument Name:</strong> {{ instumentData.name }}</li>
+          <li><strong>Description:</strong> {{ instumentData.description }}</li>
+          <!-- Add more details here if needed -->
+        </ul>
+
+        <p><strong>Deadline for Submission:</strong> {{ futureDate | date }}</p>
+
+        <p>
+          Please take some time to review the instrument details and provide us
+          with your best quote by the specified deadline. Should you have any
+          questions or require further clarification, feel free to reach out to
+          me directly at
+          {{ mailId }} .
+        </p>
+
+        <p>
+          We look forward to receiving your quote and potentially collaborating
+          with you on this project.
+        </p>
+
+        <p>Best regards,</p>
+        <p>
+          Henry James<br />Purchasing Manager<br />Intellias Technologie
+          pvt.ltd<br />+892656782
+        </p>
+      </body>
+    </html>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button
+    class="send-btn"
+    mat-button
+    mat-dialog-close
+    mat-flat-button
+    color="primary"
+    (click)="sendInvites()"
+  >
+    Send
+  </button>
+  <button mat-button mat-dialog-close cdkFocusInitial>Cancel</button>
+</mat-dialog-actions>

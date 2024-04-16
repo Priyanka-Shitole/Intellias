@@ -1,0 +1,23 @@
+<div class="inventory-cards">
+  <div *ngFor="let i of instruments">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>{{ i.name }}</mat-card-title>
+        <mat-card-subtitle>{{ i.type }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <img mat-card-image [src]="i.image" alt="Photo of a Shiba Inu" />
+
+      <mat-card-content>
+        <p class="description">
+          {{ i.description }}
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button  color="primary"
+        mat-flat-button (click)="openDialog(i)">INVITE</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

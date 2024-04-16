@@ -1,15 +1,30 @@
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  MatDialog,
+  MatDialogRef,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogTitle,
+  MatDialogContent,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
+import { counterParties } from '../../assets/counter-parties';
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-// interface TestNode {
-//   display: string;
-//   value: string;
-//   children?: TestNode[];
-//   isSelected: boolean;
-// }
+import { Observable, from } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { EmailComponent } from '../email/email.component';
+import { FormControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ViewportScroller } from '@angular/common';
+import { SingleSelectComponent } from '../single-select/single-select.component';
 interface name {
   first: string;
   last: string;
@@ -31,55 +46,19 @@ interface TestNode {
   isSelected: boolean;
   children?: counterindivisualNode[];
 }
+
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  selector: 'app-invite-counterparties',
+  templateUrl: './invite-counterparties.component.html',
+  styleUrl: './invite-counterparties.component.scss',
 })
-export class AppComponent {
-  title = 'Intellias';
-  // test_data: TestNode[] = [
-  //   {
-  //     display: 'Fruits',
-  //     value: 'Fruits',
-  //     isSelected: false,
-  //     children: [
-  //       { display: 'Apple', value: 'Apple', isSelected: false },
-  //       { display: 'Banana', value: 'Banana', isSelected: false },
-  //       { display: 'Fruit loops', value: 'Fruit loops', isSelected: false },
-  //     ],
-  //   },
-  //   {
-  //     display: 'Vegetables',
-  //     value: 'Vegetables',
-  //     isSelected: false,
-  //     children: [
-  //       {
-  //         display: 'Greens',
-  //         value: 'Greens',
-  //         isSelected: false,
-  //         children: [
-  //           { display: 'Broccoli', value: 'Broccoli', isSelected: false },
-  //           {
-  //             display: 'Brussels sprouts',
-  //             value: 'Brussels sprouts',
-  //             isSelected: false,
-  //           },
-  //           { display: 'Spinach', value: 'Spinach', isSelected: false },
-  //         ],
-  //       },
-  //       {
-  //         display: 'Non-greens',
-  //         value: 'Non-greens',
-  //         isSelected: false,
-  //         children: [
-  //           { display: 'Pumpkins', value: 'Pumpkins', isSelected: false },
-  //           { display: 'Carrots', value: 'Carrots', isSelected: false },
-  //         ],
-  //       },
-  //     ],
-  //   },
-  // ];
+export class InviteCounterpartiesComponent implements OnInit {
+  // @ViewChild('singleSelectComponent')
+  // singleSelectComponent!: ElementRef<SingleSelectComponent>;
+  @ViewChild('singleSelectComponent')
+  singleSelectComponent!: SingleSelectComponent;
+
+
   test_data: TestNode[] = [
     {
       name: 'Group1',
@@ -363,49 +342,108 @@ export class AppComponent {
       ],
     },
   ];
-  treeControl = new NestedTreeControl<TestNode>((node:any) => node.children);
+  treeControl = new NestedTreeControl<TestNode>((node: any) => node.children);
   dataSource = new MatTreeNestedDataSource<TestNode>();
 
   childIsSelectedList: any = [];
 
   selections: any = [];
-
+  selectedChildren: any = [];
   // [START] possibly for search feature...? //
   nestedSelectControl = new FormControl();
   test_data_options!: Observable<TestNode[]>;
 
-  // _filterTree(value: string) {
-  //   const filterValue = value.toLowerCase();
-  //   const result = this.test_data.filter((nodes: any) => {
-  //     if (nodes) {
-  //       console.log('logging fiter node: ', nodes);
-  //       return true;
-  //     }
-  //   });
-  //   return result;
-  // }
-  // [END] possibly for search feature...? //
+  selectedParties: any = [];
+  counterPartiesDataArray: any[] = [];
+  counterPartiesGroup: any[] = [
+    { id: 1, group: 'Group1' },
+    { id: 2, group: 'Group2' },
+    { id: 3, group: 'Group3' },
+  ];
+  counterParties: any = [];
 
-  constructor() {
+  selectedOption: string = '';
+  selectedGroup: string = '';
+  constructor(
+    public dialogRef: MatDialogRef<InviteCounterpartiesComponent>,
+    private cd: ChangeDetectorRef,
+    public dialog: MatDialog,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private _snackBar: MatSnackBar,
+    private viewportScroller: ViewportScroller,
+    private elementRef: ElementRef
+  ) {
     this.dataSource.data = this.test_data;
   }
-
   hasChild = (_: number, node: TestNode) =>
     !!node.children && node.children.length > 0;
-
   ngOnInit() {
-    // this.test_data_options = this.nestedSelectControl.valueChanges.pipe(
-    //   startWith(''),
-    //   map((value) => this._filterTree(value))
-    // );
+    this.counterPartiesDataArray = counterParties; // Assign the imported array to a local variable
+  }
+  setAll(selected: boolean, node: any) {
+    if (selected == true) {
+      if (node.children) {
+        this.counterParties.push(node.children);
+      } else {
+        let arr: any = [];
+        arr = arr.push(node);
+        this.counterParties = [...arr, ...this.counterParties];
+      }
+    }
+  }
+
+  onOptionSelected(selectedOption: any) {
+    this.selectedParties = [...this.selectedParties, { ...selectedOption }];
+    this.selectedParties = Array.from(
+      new Set(this.selectedParties.map(JSON.stringify))
+    ).map((item: any) => JSON.parse(item) as any);
+    this.selectedParties = this.selectedParties;
+  }
+  sendInvite() {
+    let arr = this.dataSource.data.forEach((group) => {
+      if (group.children) {
+        group.children.forEach((child) => {
+          if (child.isSelected) {
+            this.selectedChildren.push(child);
+          }
+        });
+      }
+    });
+   
+    this.selectedParties = this.singleSelectComponent.selectedParties;
+    // this.selectedParties = this.multiSelectComponent.selections;
+    let partiesData = this.formValid([
+      ...this.selectedParties,
+      ...this.selectedChildren,
+    ]);
+
+    if (partiesData.length > 0) {
+      this.dialog.open(EmailComponent, {
+        width: '800px',
+        data: {
+          selectedParties: [...this.selectedParties, ...this.selectedChildren],
+          instrumentData: this.data,
+        },
+      });
+      this.dialogRef.close();
+    } else {
+      this._snackBar.open('Please select atleast one contact!', 'Close', {
+        duration: 3000,
+        verticalPosition: 'top', // Duration the snackbar should be displayed (in milliseconds)
+      });
+    }
+  }
+
+  formValid(selectedOption: any) {
+    return Array.from(new Set(selectedOption.map(JSON.stringify))).map(
+      (item: any) => JSON.parse(item) as any
+    );
   }
 
   selectionToggleLeaf(isChecked: boolean, node: any) {
-    // console.log('leaf selected: ', node);
     node.isSelected = isChecked;
     if (node.isSelected && this.selections.includes(node.value)) {
       this.selections.push(node.value);
-      console.log('selections list: ', this.selections);
     } else if (!node.isSelected && this.selections.includes(node.value)) {
       let deleteIndex = this.selections.indexOf(node.value);
       this.selections.splice(deleteIndex, 1);
@@ -413,11 +451,9 @@ export class AppComponent {
   }
 
   selectionToggle(isChecked: boolean, node: any) {
-    // console.log('branch node selected: ', node);
     node.isSelected = isChecked;
     if (node.isSelected && !this.selections.includes(node.value)) {
       this.selections.push(node.value);
-      console.log('selections list: ', this.selections);
     } else if (!node.isSelected && this.selections.includes(node.value)) {
       let deleteIndex = this.selections.indexOf(node.value);
       this.selections.splice(deleteIndex, 1);
@@ -429,66 +465,33 @@ export class AppComponent {
     }
   }
 
-  // descendantsAllSelected(node: TestNode) {
-  //   let childIsSelectedList: any = [];
-  //   if (node.children && node.children.length) {
-  //     node.children.forEach((child: any) => {
-  //       childIsSelectedList.push(child.isSelected);
-  //     });
-  //   }
-
-  //   // scans to see if children are all true
-  //   if (
-  //     childIsSelectedList.length &&
-  //     childIsSelectedList.every((item: any) => {
-  //       return item;
-  //     })
-  //   ) {
-  //     console.log('All Selected for node: ', node);
-  //     console.log('Child isSelected List: ', childIsSelectedList);
-  //     if (!this.selections.includes(node.value)) {
-  //       this.selections.push(node.value);
-  //       // console.log('selections list: ', this.selections)
-  //     }
-  //     return true;
-  //   }
-
-  //   if (node.children && node.children.length) {
-  //     node.children.forEach((child: any) => {
-  //       this.descendantsAllSelected(child);
-  //     });
-  //   }
-  // }
-  descendantsAllSelected(node:TestNode) {
-    let childIsSelectedList:any = [];
+  descendantsAllSelected(node: TestNode) {
+    let childIsSelectedList: any = [];
     if (node.children && node.children.length) {
       node.children.forEach((child) => {
         childIsSelectedList.push(child.isSelected);
       });
     }
-  
+
     // scans to see if children are all true
     if (
       childIsSelectedList.length &&
-      childIsSelectedList.every((item:any) => {
+      childIsSelectedList.every((item: any) => {
         return item;
       })
     ) {
-      console.log('All Selected for node: ', node);
-      console.log('Child isSelected List: ', childIsSelectedList);
       if (!this.selections.includes(node.name)) {
         this.selections.push(node.name);
-        // console.log('selections list: ', this.selections)
       }
       return true;
     }
-  
+
     if (node.children && node.children.length) {
-      node.children.forEach((child:any) => {
+      node.children.forEach((child: any) => {
         this.descendantsAllSelected(child);
       });
     }
-  
+
     // Add a return statement at the end of the function
     return false;
   }
@@ -501,45 +504,22 @@ export class AppComponent {
     }
   }
 
-  // checkDescPartSelection(node: TestNode) {
-  //   this.childIsSelectedList = [];
-
-  //   this.addChildSelection(node);
-  //   // scans to see if children contain any false, but not all false
-  //   console.log('this.childSelectedList: ', this.childIsSelectedList);
-  //   if (
-  //     this.childIsSelectedList.includes(false) &&
-  //     !this.childIsSelectedList.every((item: any) => {
-  //       return !item;
-  //     })
-  //   ) {
-  //     // let deleteIndex = this.selections.indexOf(node.value);
-  //     // this.selections.splice(deleteIndex, 1);
-  //     return true;
-  //   }
-  // }
   checkDescPartSelection(node: TestNode) {
     this.childIsSelectedList = [];
-  
+
     this.addChildSelection(node);
-    // scans to see if children contain any false, but not all false
-    console.log('this.childSelectedList: ', this.childIsSelectedList);
+
     if (
       this.childIsSelectedList.includes(false) &&
       !this.childIsSelectedList.every((item: any) => {
         return !item;
       })
     ) {
-      // let deleteIndex = this.selections.indexOf(node.value);
-      // this.selections.splice(deleteIndex, 1);
       return true;
     }
-  
-    // Add a return statement at the end of the function
+
     return false;
   }
 
-  filterChanged(inputValue: any) {
-    console.log('filtering for...', inputValue);
-  }
+  filterChanged(inputValue: any) {}
 }

@@ -1,0 +1,20 @@
+@import "ngx-toastr/toastr";
+.email-container {
+  padding: 61px 71px;
+}
+
+h2 {
+  margin-top: 20px;
+}
+.custom-snackbar {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+::ng-deep .cdk-overlay-pane.mat-mdc-dialog-panel {
+  max-height: 500px !important;
+  overflow-y: auto;
+}
+.mat-mdc-dialog-actions {
+  justify-content: end;
+}

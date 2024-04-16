@@ -1,0 +1,123 @@
+export const counterParties: any[] = [
+  {
+    _id: '1',
+    picture: 'https://example.com/picture1.jpg',
+    name: {
+      first: 'John',
+      last: 'Doe',
+    },
+    company: 'ABC Inc.',
+    email: 'john.doe@example.com',
+    phone: '+1234567890',
+    groups: ['Group1', 'Group2'],
+  },
+  {
+    _id: '2',
+    picture: 'https://example.com/picture2.jpg',
+    name: {
+      first: 'Jane',
+      last: 'Smith',
+    },
+    company: 'XYZ Corp.',
+    email: 'jane.smith@example.com',
+    phone: '+1987654321',
+    groups: ['Group2', 'Group3'],
+  },
+  {
+    _id: '3',
+    picture: 'https://example.com/picture3.jpg',
+    name: {
+      first: 'Michael',
+      last: 'Johnson',
+    },
+    company: 'LMN Co.',
+    email: 'michael.johnson@example.com',
+    phone: '+1122334455',
+    groups: ['Group1', 'Group3'],
+  },
+  {
+    _id: '4',
+    picture: 'https://example.com/picture4.jpg',
+    name: {
+      first: 'Emily',
+      last: 'Brown',
+    },
+    company: 'PQR Ltd.',
+    email: 'emily.brown@example.com',
+    phone: '+1555666777',
+    groups: ['Group1', 'Group2'],
+  },
+  {
+    _id: '5',
+    picture: 'https://example.com/picture5.jpg',
+    name: {
+      first: 'Daniel',
+      last: 'Wilson',
+    },
+    company: 'STU Corp.',
+    email: 'daniel.wilson@example.com',
+    phone: '+1444333222',
+    groups: ['Group2', 'Group3'],
+  },
+
+  {
+    _id: '6',
+    picture: 'https://example.com/picture6.jpg',
+    name: {
+      first: 'Sarah',
+      last: 'Garcia',
+    },
+    company: 'VWX Enterprises',
+    email: 'sarah.garcia@example.com',
+    phone: '+1666999888',
+    groups: ['Group1', 'Group3'],
+  },
+  {
+    _id: '7',
+    picture: 'https://example.com/picture7.jpg',
+    name: {
+      first: 'David',
+      last: 'Martinez',
+    },
+    company: 'GHI Solutions',
+    email: 'david.martinez@example.com',
+    phone: '+1777888999',
+    groups: ['Group1', 'Group2'],
+  },
+  {
+    _id: '8',
+    picture: 'https://example.com/picture8.jpg',
+    name: {
+      first: 'Jessica',
+      last: 'Lee',
+    },
+    company: 'NOP Limited',
+    email: 'jessica.lee@example.com',
+    phone: '+1888999000',
+    groups: ['Group2', 'Group3'],
+  },
+  {
+    _id: '9',
+    picture: 'https://example.com/picture9.jpg',
+    name: {
+      first: 'Matthew',
+      last: 'Taylor',
+    },
+    company: 'QRS Inc.',
+    email: 'matthew.taylor@example.com',
+    phone: '+1999888777',
+    groups: ['Group1', 'Group3'],
+  },
+  {
+    _id: '10',
+    picture: 'https://example.com/picture10.jpg',
+    name: {
+      first: 'Amanda',
+      last: 'Rodriguez',
+    },
+    company: 'UVW Corporation',
+    email: 'amanda.rodriguez@example.com',
+    phone: '+1666555444',
+    groups: ['Group1', 'Group2'],
+  },
+];
